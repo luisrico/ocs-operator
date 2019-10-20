@@ -47,7 +47,8 @@ func (t *DeployManager) StartDefaultStorageCluster() error {
 	return nil
 }
 
-func defaultStorageCluster() (*ocsv1.StorageCluster, error) {
+// DefaultStorageCluster returns a default StorageCluster manifest
+func DefaultStorageCluster() (*ocsv1.StorageCluster, error) {
 	monQuantity, err := resource.ParseQuantity("10Gi")
 	if err != nil {
 		return nil, err
@@ -60,7 +61,7 @@ func defaultStorageCluster() (*ocsv1.StorageCluster, error) {
 	blockVolumeMode := k8sv1.PersistentVolumeBlock
 	storageCluster := &ocsv1.StorageCluster{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      DefaultStorageCluster,
+			Name:      DefaultStorageClusterName,
 			Namespace: "openshift-storage",
 		},
 		Spec: ocsv1.StorageClusterSpec{
@@ -96,7 +97,11 @@ func defaultStorageCluster() (*ocsv1.StorageCluster, error) {
 					Requests: corev1.ResourceList{},
 					Limits:   corev1.ResourceList{},
 				},
-				"noobaa": corev1.ResourceRequirements{
+				"noobaa-core": corev1.ResourceRequirements{
+					Requests: corev1.ResourceList{},
+					Limits:   corev1.ResourceList{},
+				},
+				"noobaa-db": corev1.ResourceRequirements{
 					Requests: corev1.ResourceList{},
 					Limits:   corev1.ResourceList{},
 				},
@@ -138,7 +143,7 @@ func (t *DeployManager) getStorageCluster() (*ocsv1.StorageCluster, error) {
 	err := t.ocsClient.Get().
 		Resource("storageclusters").
 		Namespace(InstallNamespace).
-		Name(DefaultStorageCluster).
+		Name(DefaultStorageClusterName).
 		VersionedParams(&metav1.GetOptions{}, t.parameterCodec).
 		Do().
 		Into(sc)
@@ -154,7 +159,7 @@ func (t *DeployManager) getStorageCluster() (*ocsv1.StorageCluster, error) {
 func (t *DeployManager) createStorageCluster() (*ocsv1.StorageCluster, error) {
 	newSc := &ocsv1.StorageCluster{}
 
-	sc, err := defaultStorageCluster()
+	sc, err := DefaultStorageCluster()
 	if err != nil {
 		return nil, err
 	}
@@ -265,6 +270,43 @@ func (t *DeployManager) waitOnStorageCluster() error {
 
 		if osdsOnline < MinOSDsCount {
 			lastReason = fmt.Sprintf("%d/%d expected OSDs are online", osdsOnline, MinOSDsCount)
+		}
+
+		// We expect a canary pod for each osd deployment
+		pods, err := t.k8sClient.CoreV1().Pods(InstallNamespace).List(metav1.ListOptions{LabelSelector: "app=rook-ceph-drain-canary"})
+		if err != nil {
+			lastReason = fmt.Sprintf("%v", err)
+			return false, nil
+		}
+
+		canaryOnline := 0
+		for _, pod := range pods.Items {
+			if pod.Status.Phase == k8sv1.PodRunning {
+				canaryOnline++
+			}
+		}
+		if canaryOnline < MinOSDsCount {
+			lastReason = fmt.Sprintf("Waiting on %d/%d canary pods to come online", canaryOnline, MinOSDsCount)
+			return false, nil
+		}
+
+		// expect noobaa-core pod with label selector (noobaa-core=noobaa) to be running
+		pods, err = t.k8sClient.CoreV1().Pods(InstallNamespace).List(metav1.ListOptions{LabelSelector: "noobaa-core=noobaa"})
+		if err != nil {
+			lastReason = fmt.Sprintf("%v", err)
+			return false, nil
+		}
+
+		noobaaCoreOnline := 0
+		for _, pod := range pods.Items {
+			if pod.Status.Phase == k8sv1.PodRunning {
+				noobaaCoreOnline++
+			}
+		}
+
+		if noobaaCoreOnline == 0 {
+			lastReason = "Waiting on noobaa-core pod to come online"
+			return false, nil
 		}
 
 		return true, nil
