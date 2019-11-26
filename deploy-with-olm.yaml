@@ -33,13 +33,13 @@ spec:
   publisher: Red Hat
   sourceType: grpc
 ---
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: ocs-subscription
-  namespace: openshift-storage
-spec:
-  channel: alpha
-  name: ocs-operator
-  source: ocs-catalogsource
-  sourceNamespace: openshift-marketplace
+#apiVersion: operators.coreos.com/v1alpha1
+#kind: Subscription
+#metadata:
+#  name: ocs-subscription
+#  namespace: openshift-storage
+#spec:
+#  channel: alpha
+#  name: ocs-operator
+#  source: ocs-catalogsource
+#  sourceNamespace: openshift-marketplace
