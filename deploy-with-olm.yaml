@@ -29,7 +29,7 @@ spec:
   icon:
     base64data: ""
     mediatype: ""
-  image: quay.io/rhceph-dev/ocs-registry:latest
+  image: quay.io/rhceph-dev/ocs-olm-operator:4.2-rc3
   publisher: Red Hat
   sourceType: grpc
 ---
