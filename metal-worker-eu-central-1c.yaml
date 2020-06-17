@@ -37,7 +37,7 @@ spec:
           deviceIndex: 0
           iamInstanceProfile:
             id: cluster-demo-cb6c-4gjdl-worker-profile
-          instanceType: m5.metal
+          instanceType: m5d.metal
           kind: AWSMachineProviderConfig
           placement:
             availabilityZone: eu-central-1c
