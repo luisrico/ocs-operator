@@ -1,0 +1,10 @@
+### Copy and paste when editing ConfigMap of CNV default storage class.
+# Replace the below when: oc edit cm kubevirt-storage-class-defaults -n openshift-cnv
+#
+data:
+  accessMode: ReadWriteMany
+  ocs-storagecluster-ceph-rbd.accessMode: ReadWriteMany
+  ocs-storagecluster-ceph-rbd.volumeMode: Block
+  ocs-storagecluster-cephfs.accessMode: ReadWriteMany
+  ocs-storagecluster-cephfs.volumeMode: Filesystem
+  volumeMode: Block

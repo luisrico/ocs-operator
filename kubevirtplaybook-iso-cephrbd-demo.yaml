@@ -1,0 +1,11 @@
+---
+- name: Upload cdi
+  hosts: localhost
+  tasks:
+  - name: Upload local image to iso-cephrbd-vol1
+    kubevirt_cdi_upload:
+      pvc_namespace: test
+      pvc_name: iso-cephrbd-vol1
+      upload_host: https://cdi-uploadproxy-openshift-cnv.apps.cluster-demo-cb6c.demo-cb6c.example.opentlc.com
+      upload_host_validate_certs: false
+      path: /home/lricomor-redhat.com/Fedora-Server-dvd-x86_64-32-1.6.iso
