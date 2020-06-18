@@ -1,0 +1,31 @@
+apiVersion: local.storage.openshift.io/v1
+kind: LocalVolume
+metadata:
+  name: local-block
+  namespace: local-storage
+  labels:
+    app: ocs-storagecluster
+spec:
+  nodeSelector:
+    nodeSelectorTerms:
+      - matchExpressions:
+          - key: cluster.ocs.openshift.io/openshift-storage
+            operator: In
+            values:
+              - ''
+  storageClassDevices:
+    - storageClassName: localblock
+      volumeMode: Block
+      devicePaths:
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS02C55798D88C9BDF9
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS2161F32F3032063ED
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS0A0BFFE5E38E30063
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS21453EEFD981B2700
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS0118EA94AE3E7C2D6
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS21E9525EF5CC66055
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS01D24C5C60874F7B0
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS2100E85FE30F324F6
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS0E36CCF2ACF062BBB
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS219FB33E93143C1CD
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS09F045C84226DBDC9
+        - /dev/disk/by-id/nvme-Amazon_EC2_NVMe_Instance_Storage_AWS2117CA37EDF4F3ADB
