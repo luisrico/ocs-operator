@@ -2,19 +2,19 @@ apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
   labels:
-    machine.openshift.io/cluster-api-cluster: cluster-demo-cb6c-4gjdl
+    machine.openshift.io/cluster-api-cluster: cluster-c066-6jpw9
   name: metal-worker-eu-central-1c
   namespace: openshift-machine-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: cluster-demo-cb6c-4gjdl
+      machine.openshift.io/cluster-api-cluster: cluster-c066-6jpw9
       machine.openshift.io/cluster-api-machineset: metal-worker-eu-central-1c
   template:
     metadata:
       labels:
-        machine.openshift.io/cluster-api-cluster: cluster-demo-cb6c-4gjdl
+        machine.openshift.io/cluster-api-cluster: cluster-c066-6jpw9
         machine.openshift.io/cluster-api-machine-role: worker
         machine.openshift.io/cluster-api-machine-type: worker
         machine.openshift.io/cluster-api-machineset: metal-worker-eu-central-1c
@@ -36,7 +36,7 @@ spec:
             name: aws-cloud-credentials
           deviceIndex: 0
           iamInstanceProfile:
-            id: cluster-demo-cb6c-4gjdl-worker-profile
+            id: cluster-c066-6jpw9-worker-profile
           instanceType: m5d.metal
           kind: AWSMachineProviderConfig
           placement:
@@ -47,19 +47,19 @@ spec:
           - filters:
             - name: tag:Name
               values:
-              - cluster-demo-cb6c-4gjdl-worker-sg
+              - cluster-c066-6jpw9-worker-sg
           subnet:
             filters:
             - name: tag:Name
               values:
-              - cluster-demo-cb6c-4gjdl-private-eu-central-1c
+              - cluster-c066-6jpw9-private-eu-central-1c
           tags:
-          - name: kubernetes.io/cluster/cluster-demo-cb6c-4gjdl
+          - name: kubernetes.io/cluster/cluster-c066-6jpw9
             value: owned
           - name: env_type
             value: ocp4-workshop
           - name: guid
-            value: demo-cb6c
+            value: c066
           - name: owner
             value: lricomor@redhat.com
           - name: platform
@@ -67,9 +67,9 @@ spec:
           - name: uuid
             value: f29e1263-8b13-4183-846c-c36d050a746b
           - name: Stack
-            value: project ocp4-workshop-demo-cb6c
+            value: project ocp4-workshop-c066
           - name: catalog_item
-            value: OpenShift_4.4_Workshop
+            value: OpenShift_4.5_Workshop__Small_
           - name: email
             value: lricomor@redhat.com
           userDataSecret:
